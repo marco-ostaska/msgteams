@@ -7,7 +7,7 @@ on:
 
 jobs:
   test:
-    runs-on: ubuntu-latest
+    runs-on: [ubuntu-latest,windows-latest]
     steps:
     - uses: actions/checkout@v2
     - name: Set up Go
@@ -18,10 +18,6 @@ jobs:
       run: cd ./internal/teams && go test -v ./...
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-    - name: Extract version and changes from CHANGELOG.md
-      run: |
-        version=$(grep '^## \[' CHANGELOG.md | head -n 1 | awk -F '[][]' '{print $2}')
-        echo "version=$version" >> $GITHUB_OUTPUT
     - name: Build for Linux
       run: go build -o msgteams_linux
       if: success()
@@ -30,10 +26,10 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        tag: ${{ env.version }}
+        tag: ${{ github.ref }}
         overwrite: true
-        release_name: ${{ env.version }}
-        body: "teste"
+        release_name:  ${{ github.ref }}
+        body: "qualquer coisa"
         prerelease: false
         file: msgteams_linux
       if: success()
@@ -46,10 +42,10 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        tag: ${{ env.version }}
+        tag: ${{ github.ref }}
         overwrite: true
-        release_name: ${{ env.version }}
-        body: "teste"
+        release_name: ${{ github.ref }}
+        body: "qualquer coisa"
         prerelease: false
         file: msgteams_windows.exe
       if: success()
