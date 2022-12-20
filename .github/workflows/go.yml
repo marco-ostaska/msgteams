@@ -32,10 +32,9 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        tag_name: ${{ steps.extract_version_changes.outputs.version }}
+        tag: ${{ steps.extract_version_changes.outputs.version }}
         release_name: ${{ steps.extract_version_changes.outputs.version }}
         body: ${{ steps.extract_version_changes.outputs.changes }}
-        draft: false
         prerelease: false
         file: msgteams_linux
       if: success()
@@ -48,10 +47,9 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        tag_name: ${{ steps.extract_version_changes.outputs.version }}
+        tag: ${{ steps.extract_version_changes.outputs.version }}
         release_name: ${{ steps.extract_version_changes.outputs.version }}
         body: ${{ steps.extract_version_changes.outputs.changes }}
-        draft: false
         prerelease: false
         file: msgteams_windows.exe
       if: success()
