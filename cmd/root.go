@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/marcoan-ostaska/msgteams/internal/teams"
+	"github.com/marco-ostaska/msgteams/internal/teams"
 	"github.com/spf13/cobra"
 )
 
