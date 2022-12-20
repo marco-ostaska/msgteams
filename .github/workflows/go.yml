@@ -22,8 +22,8 @@ jobs:
       run: |
         version=$(grep '^## \[' CHANGELOG.md | head -n 1 | awk '{print $2}' | tr -d '[|]')
         changes=$(sed -n '/^## \['"$version"'/,/^##/p' CHANGELOG.md | tail -n +2 | head -n -1)
-        echo ::set-output name=version::$version
-        echo ::set-output name=changes::"$changes"
+        echo "version=$version" >> $GITHUB_OUTPUT
+        echo "changes=$changes" >> $GITHUB_OUTPUT
     - name: Build for Linux
       run: go build -o msgteams_linux
       if: success()
@@ -32,9 +32,10 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        tag: ${{ steps.extract_version_changes.outputs.version }}
-        release_name: ${{ steps.extract_version_changes.outputs.version }}
-        body: ${{ steps.extract_version_changes.outputs.changes }}
+        tag: ${{ env.version }}
+        overwrite: true
+        release_name: ${{ env.version }}
+        body: ${{ env.changes }}
         prerelease: false
         file: msgteams_linux
       if: success()
@@ -47,9 +48,10 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        tag: ${{ steps.extract_version_changes.outputs.version }}
-        release_name: ${{ steps.extract_version_changes.outputs.version }}
-        body: ${{ steps.extract_version_changes.outputs.changes }}
+        tag: ${{ env.version }}
+        overwrite: true
+        release_name: ${{ env.version }}
+        body: ${{ env.changes }}
         prerelease: false
         file: msgteams_windows.exe
       if: success()
