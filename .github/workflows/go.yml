@@ -28,7 +28,7 @@ jobs:
       run: go build -o msgteams_linux
       if: success()
     - name: Create release for Linux
-      uses: actions/create-release@v1
+      uses: svenstaro/upload-release-action@v2
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
@@ -44,7 +44,7 @@ jobs:
         GOOS=windows GOARCH=amd64 go build -o msgteams_windows.exe
       if: success()
     - name: Create release for Windows
-      uses: actions/create-release@v1
+      uses:  svenstaro/upload-release-action@v2
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
