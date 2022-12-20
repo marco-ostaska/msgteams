@@ -37,8 +37,8 @@ jobs:
         body: ${{ steps.extract_version_changes.outputs.changes }}
         draft: false
         prerelease: false
-        file_outputs:
-          file1: msgteams_linux
+      file_outputs:
+        file1: msgteams_linux
       if: success()
     - name: Build for Windows
       run: |
@@ -54,6 +54,6 @@ jobs:
         body: ${{ steps.extract_version_changes.outputs.changes }}
         draft: false
         prerelease: false
-        file_outputs:
-          file1: msgteams_windows.exe
+      file_outputs:
+        file1: msgteams_windows.exe
       if: success()
