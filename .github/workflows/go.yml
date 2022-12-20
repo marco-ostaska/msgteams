@@ -1,0 +1,59 @@
+name: Build and Release
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Set up Go
+      uses: actions/setup-go@v2
+      with:
+        go-version: ^1.16
+    - name: Test
+      run: go test -v ./...
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    - name: Extract version and changes from CHANGELOG.md
+      run: |
+        version=$(grep '^## \[' CHANGELOG.md | head -n 1 | awk '{print $2}' | tr -d '[|]')
+        changes=$(sed -n '/^## \['"$version"'/,/^##/p' CHANGELOG.md | tail -n +2 | head -n -1)
+        echo ::set-output name=version::$version
+        echo ::set-output name=changes::"$changes"
+    - name: Build for Linux
+      run: go build -o msgteams_linux
+      if: success()
+    - name: Create release for Linux
+      uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: ${{ steps.extract_version_changes.outputs.version }}
+        release_name: ${{ steps.extract_version_changes.outputs.version }}
+        body: ${{ steps.extract_version_changes.outputs.changes }}
+        draft: false
+        prerelease: false
+        file_outputs:
+          file1: msgteams_linux
+      if: success()
+    - name: Build for Windows
+      run: |
+        GOOS=windows GOARCH=amd64 go build -o msgteams_windows.exe
+      if: success()
+    - name: Create release for Windows
+      uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: ${{ steps.extract_version_changes.outputs.version }}
+        release_name: ${{ steps.extract_version_changes.outputs.version }}
+        body: ${{ steps.extract_version_changes.outputs.changes }}
+        draft: false
+        prerelease: false
+        file_outputs:
+          file1: msgteams_windows.exe
+      if: success()
