@@ -1,6 +1,9 @@
 name: Build and Release
 
 on:
+  release:
+    branches
+      - main
   push:
     branches:
       - main
