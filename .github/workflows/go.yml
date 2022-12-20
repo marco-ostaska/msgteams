@@ -4,9 +4,6 @@ on:
   release:
     branches
       - main
-  push:
-    branches:
-      - main
 
 jobs:
   test:
